@@ -27,3 +27,9 @@ out/
 # Logs
 logs/
 *.log 
+
+# SSL
+ssl/*.key
+ssl/*.crt
+ssl/*.pem
+ssl/*.csr 
