@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 
 import ReplaceLorem from "./replaceLorem";
 import RewritePage from "./rewritePage";
+import RewriteSelection from "./rewriteSelection";
+
 const App: React.FC = () => {
   
   const [apiKey, setApiKey] = useState(localStorage.getItem("apiKey") || "");
@@ -32,6 +34,8 @@ const App: React.FC = () => {
       await ReplaceLorem(apiKey,userPrompt,setStatusMessage);
     } else if (action === "RewritePage") {
       await RewritePage(apiKey,userPrompt,setStatusMessage);
+    } else if (action === "RewriteSelection") {
+      await RewriteSelection(apiKey,userPrompt,setStatusMessage);
     }
   };
 
@@ -46,6 +50,7 @@ const App: React.FC = () => {
       <option>Select Action</option>
       <option value="ReplaceLorem">Fill in Lorem Ipsum</option>
       <option value="RewritePage">Rewrite page</option>
+      <option value="RewriteSelection">Rewrite selection</option>
     </select>
 
     <label>Enter Prompt</label>
