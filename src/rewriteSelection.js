@@ -4,8 +4,15 @@ const gptSystemPrompt = `
     You are an elite level SEO and copywriting expert. The character archetype voice is sage/caregiver.
     
     You will be given a string of text that represents notes or examples on how the copy for this section should be completed. 
-    Using the user prompt, fill in and/or complete the string with the new expert copy that matches the archetype voice.
-    
+    Using the user prompt, reply with at least five options that fill in and/or complete the string with the new expert copy that matches the archetype voice.
+
+    The reply json should be in the following format:
+    {"options": [
+        "option1",
+        "option2",
+        "option3"
+    ]}
+
     Important:
     - Return your response as **string only**.
     - Your copy writing should have no fluff or filler, and be concise and to the point. This is an example of fluff: "Introducing the third major benefit — Lastly, our third benefit promotes a stronger immune system, supporting overall health and preventing illness." This is how it should be written: "StrongerImmunity — Promote stronger immunity, support overall health and prevent illness."
@@ -15,7 +22,7 @@ const gptSystemPrompt = `
     - Do not start sentences with "Discover", "Imagine", "Unlock", "Transform"
 `;
 
-async function rewriteSelection(apiKey,userPrompt,setStatusMessage) {
+async function rewriteSelection(apiKey,userPrompt,setStatusMessage,setModalOptions) {
 
     console.clear()
     setStatusMessage("Finding all text...")
@@ -80,7 +87,7 @@ async function rewriteSelection(apiKey,userPrompt,setStatusMessage) {
         },
         body: JSON.stringify({
           model: "gpt-4-turbo", //"gpt-4o", //"gpt-3.5-turbo",
-          response_format: { type: "text" }, //"json_object"
+          response_format: { type: "json_object" }, //"json_object"
           messages: [
             { role: "system", content: gptSystemPrompt },
             { role: "user", content: userPrompt || "" },
@@ -91,13 +98,17 @@ async function rewriteSelection(apiKey,userPrompt,setStatusMessage) {
 
     const data = await gptResponse.json()
     const dataObject = data.choices[0].message.content
-    
+    const options = JSON.parse(dataObject).options
+
+    setModalOptions(options, (option) => {
+        stringElement.setText(option)
+    })
+
     log(data)
     setStatusMessage("Applying changes...")
 
-   
-    await stringElement.setText(dataObject)
-    console.log(selectedElement.id.element,string)
+    // await stringElement.setText(dataObject)
+    // console.log(selectedElement.id.element,string)
        
 
     setStatusMessage("")

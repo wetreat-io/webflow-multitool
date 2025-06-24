@@ -10,6 +10,7 @@ const App: React.FC = () => {
   const [apiKey, setApiKey] = useState(localStorage.getItem("apiKey") || "");
   const [action, setAction] = useState("ReplaceLorem");
   const [userPrompt, setUserPrompt] = useState("");
+  const [modalOptions, _setModalOptions] = useState<React.ReactNode[]>([]);
   
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -35,15 +36,29 @@ const App: React.FC = () => {
     } else if (action === "RewritePage") {
       await RewritePage(apiKey,userPrompt,setStatusMessage);
     } else if (action === "RewriteSelection") {
-      await RewriteSelection(apiKey,userPrompt,setStatusMessage);
+      await RewriteSelection(apiKey,userPrompt,setStatusMessage,setModalOptions);
     }
+  };
+
+  const setModalOptions = (options: string[], callback: (option: string) => void) => {
+
+    const modalOptions = options.map((option) => (
+        <div className="modal-option" onClick={() => {
+        callback(option);
+        _setModalOptions([]);
+      }}>
+        {option}
+      </div> 
+    ));
+
+    _setModalOptions(modalOptions);
   };
 
   return (<div id="app-wrapper">
 
     {statusMessage !== "" && <div id="status-message">{statusMessage}</div>}
   
-    <label>ChatGPT API Key</label>
+    <label>ChatGPT API Key asdf</label>
     <input type="text" placeholder="ChatGPT API Key" defaultValue={apiKey} onChange={handleApiKeyChange}/>
     
     <select defaultValue={action||"Select Action"} onChange={handleActionChange}>
@@ -57,6 +72,13 @@ const App: React.FC = () => {
     <textarea placeholder="Enter Prompt" className="flex-1" defaultValue={userPrompt} onChange={handleUserPromptChange}></textarea>
 
     <button onClick={handleLaunch}>Launch 🚀</button>
+
+    {modalOptions.length > 0 && <div id="modal">
+      <div id="modal-content">
+        {modalOptions}
+        <button id="modal-cancel" onClick={() => _setModalOptions([])}>Cancel</button>
+      </div>
+    </div>}
   
   </div>);
 };
