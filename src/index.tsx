@@ -74,10 +74,8 @@ const App: React.FC = () => {
     <button onClick={handleLaunch}>Launch 🚀</button>
 
     {modalOptions.length > 0 && <div id="modal">
-      <div id="modal-content">
-        {modalOptions}
-        <button id="modal-cancel" onClick={() => _setModalOptions([])}>Cancel</button>
-      </div>
+      <div id="modal-content">{modalOptions}</div>
+      <button id="modal-cancel" onClick={() => _setModalOptions([])}>Cancel</button>
     </div>}
   
   </div>);
